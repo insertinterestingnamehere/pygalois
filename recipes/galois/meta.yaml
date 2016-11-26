@@ -1,0 +1,30 @@
+{% set version = "2.3.0" %}
+
+package:
+  name: galois
+  version: {{version}}
+
+source:
+  fn: Galois-{{version}}.tar.gz
+  url: http://iss.ices.utexas.edu/projects/galois/downloads/Galois-{{version}}.tar.bz2
+
+build:
+  number: 0
+  skip: True # [win]
+
+requirements:
+  build:
+    - boost 1.61.0
+    - cmake
+  run:
+    - boost 1.61.*
+
+about:
+  home: iss.ices.utexas.edu/?p=projects/galois
+  license: UT Austin Research license
+  license_family: Other
+  summary: Library for automatic parallelization of graph algorithms.
+
+extra:
+  recipe-maintainers:
+    - insertinterestingnamehere
