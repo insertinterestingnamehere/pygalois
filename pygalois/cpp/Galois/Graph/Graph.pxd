@@ -7,4 +7,6 @@ cdef extern from *:
 
 cdef extern from "Galois/Graphs/Graph.h" namespace "Galois::Graph":
     cppclass FirstGraph[node_data, edge_data, is_directed]:
-        pass
+        cppclass GraphNode:
+            pass
+
