@@ -1,1 +1,1 @@
-from .pygalois import test_print
+from .pygalois import *
