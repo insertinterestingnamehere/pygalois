@@ -9,6 +9,7 @@ cmake -DCMAKE_BUILD_TYPE=Release            \
       -DINSTALL_INCLUDE_DIR=$PREFIX/include \
       -DINSTALL_CMAKE_DIR=$PREFIX/lib/cmake \
       -DGALOIS_CMAKE_DIR=$PREFIX/lib/cmake  \
+      -DCMAKE_CXX_FLAGS="-fPIC"             \
       ..
 
 ctest || true
