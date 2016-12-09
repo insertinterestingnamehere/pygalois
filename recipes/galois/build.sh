@@ -50,7 +50,9 @@ cp    libllvm/libgllvm.a                 $PREFIX/lib/libgllvm.a
 cp    libruntime/libgalois_runtime.a     $PREFIX/lib/libgalois_runtime.a
 cp    libsubstrate/libgalois_substrate.a $PREFIX/lib/libgalois_substrate.a
 
-# It'd be nice to install all the Galois apps and
-# tools into $PREFIX/bin or $PREFIX/bin/galois
-# or something like that at some point too.
-
+# Install at least some of the apps into
+# $PREFIX/bin/Galois
+# TODO: Install all of the apps.
+mkdir $PREFIX/bin/Galois
+cp -a examples/. $PREFIX/bin/Galois
+rm -rf $PREFIX/bin/Galois/CMakefiles $PREFIX/bin/Galois/cmake* $PREFIX/bin/Galois/CTest* $PREFIX/bin/Galois/Makefile
