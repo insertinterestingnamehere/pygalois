@@ -27,6 +27,8 @@ pygalois_ext = Extension(
 setup(
       name = "pygalois",
       packages = ["pygalois"],
+      package_data = {"pygalois" : ["*.pxd", "cpp/*.pxd", "cpp/Galois/*.pxd",
+                                    "cpp/Galois/Graph/*.pxd"]},
       ext_modules = [pygalois_ext],
       cmdclass = {'build_ext' : build_ext}
       )
