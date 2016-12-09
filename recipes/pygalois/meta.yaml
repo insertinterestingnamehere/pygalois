@@ -1,0 +1,33 @@
+{% set version = "2.3.0" %}
+
+package:
+  name: pygalois
+  version: {{version}}
+
+source:
+  path: ../..
+
+build:
+  number: 0
+  skip: True # [win]
+  script: python setup.py install
+
+requirements:
+  build:
+    - setuptools
+    - boost 1.61.0
+    - cmake
+    - cython
+    - galois {{version}}
+  run:
+    - boost 1.61.*
+
+about:
+  home: https://github.com/pygalois/pygalois
+  license: UT Austin Research license
+  license_family: Other
+  summary: Experimental python bindings for automatic parallelization of graph algorithms.
+
+extra:
+  recipe-maintainers:
+    - insertinterestingnamehere
