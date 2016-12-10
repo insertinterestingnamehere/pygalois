@@ -1,7 +1,7 @@
 # cython: cdivision=True
 
 from cython.operator cimport preincrement
-from .cpp.Galois.Galois cimport UserContext, for_each
+from .cpp.Galois.Galois cimport UserContext, for_each, setActiveThreads
 from .cpp.Galois.Graph.Graph cimport dummy_true, dummy_false, FirstGraph
 from .cpp.Galois.Statistic cimport StatTimer
 from libcpp.vector cimport vector
@@ -97,14 +97,18 @@ cdef extern from "algorithm" namespace "std" nogil:
     int count_if(...) except +
 
 def run_torus(int numThreads, int n):
-    print("Using {0} thread(s) and {1} x {1} torus.".format(numThreads, n))
+    cdef int new_numThreads = setActiveThreads(numThreads)
+    if new_numThreads != numThreads:
+        print("Warning, using fewer threads than requested")
+    print("Using {0} thread(s) and {1} x {1} torus.".format(new_numThreads, n))
     cdef Graph graph
     constructTorus(graph, n, n)
     cdef StatTimer T
-    T.start()
-    for_each(graph.begin(), graph.end(),
-             bind_leading(&IncrementNeighbors, &graph))
-    T.stop()
+    with nogil:
+        T.start()
+        for_each(graph.begin(), graph.end(),
+                 bind_leading(&IncrementNeighbors, &graph))
+        T.stop()
     print("Elapsed time: {} milliseconds.".format(T.get()))
     cdef int count = count_if(graph.begin(), graph.end(),
                               bind_leading(&ValueEqual, &graph, 4))
@@ -115,6 +119,9 @@ def run_torus(int numThreads, int n):
         print("Correct!")
 
 cpdef int run_torus_quiet(int numThreads, int n) except -1:
+    cdef int new_numThreads = setActiveThreads(numThreads)
+    if new_numThreads != numThreads:
+        print("Warning, using fewer threads than requested")
     cdef Graph graph
     constructTorus(graph, n, n)
     cdef StatTimer T

@@ -8,7 +8,7 @@ source:
   path: ../..
 
 build:
-  number: 0
+  number: 2
   skip: True # [win]
   script: python setup.py install
 
