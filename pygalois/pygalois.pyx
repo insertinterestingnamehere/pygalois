@@ -127,4 +127,4 @@ cpdef int run_torus_quiet(int numThreads, int n) except -1:
     if count != n * n:
         raise ValueError("Expected {} nodes with value = 4 but found "
                          "{} nodes instead.".format(n * n, count))
-    return count
+    return T.get()
