@@ -4,8 +4,6 @@ from Cython.Distutils import build_ext
 from sysconfig import get_path
 from os.path import dirname
 
-print(get_path("include"))
-
 pygalois_ext = Extension(
                          "pygalois.pygalois",
                          sources = ["pygalois/pygalois.pyx"],
