@@ -1,4 +1,4 @@
-cdef extern from "Galois/Statistic.h" namespace "Galois" nogil:
+cdef extern from "galois/Timer.h" namespace "galois" nogil:
     cppclass StatTimer:
         StatTimer()
         void start()

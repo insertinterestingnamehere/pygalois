@@ -1,9 +1,9 @@
 # cython: cdivision=True
 
 from cython.operator cimport preincrement
-from .cpp.Galois.Galois cimport UserContext, for_each, setActiveThreads
-from .cpp.Galois.Graph.Graph cimport dummy_true, dummy_false, FirstGraph
-from .cpp.Galois.Statistic cimport StatTimer
+from .cpp.galois.Galois cimport UserContext, for_each, setActiveThreads
+from .cpp.galois.graphs.Graph cimport dummy_true, dummy_false, FirstGraph
+from .cpp.galois.Timer cimport StatTimer
 from libcpp.vector cimport vector
 
 ctypedef FirstGraph[int, void, dummy_true] Graph
