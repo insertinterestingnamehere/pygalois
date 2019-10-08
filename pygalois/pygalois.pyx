@@ -102,6 +102,8 @@ cdef extern from "algorithm" namespace "std" nogil:
     # this form matches the syntax we need to use, it is good enough.
     int count_if(...) except +
 
+# Note: broken since termination detection isn't working here for some reason.
+# Perhaps this is because of the bind_leading idiom? TODO: check this out.
 def run_torus(int numThreads, int n):
     cdef int new_numThreads = setActiveThreads(numThreads)
     if new_numThreads != numThreads:
@@ -126,6 +128,8 @@ def run_torus(int numThreads, int n):
     else:
         print("Correct!")
 
+# Note: broken since termination detection isn't working here for some reason.
+# Perhaps this is because of the bind_leading idiom? TODO: check this out.
 cpdef int run_torus_quiet(int numThreads, int n) except -1:
     cdef int new_numThreads = setActiveThreads(numThreads)
     if new_numThreads != numThreads:
