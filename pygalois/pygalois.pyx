@@ -104,7 +104,7 @@ cdef extern from "algorithm" namespace "std" nogil:
 
 # Note: broken since termination detection isn't working here for some reason.
 # Perhaps this is because of the bind_leading idiom? TODO: check this out.
-def run_torus(int numThreads, int n):
+def _run_torus(int numThreads, int n):
     cdef int new_numThreads = setActiveThreads(numThreads)
     if new_numThreads != numThreads:
         print("Warning, using fewer threads than requested")
@@ -130,7 +130,7 @@ def run_torus(int numThreads, int n):
 
 # Note: broken since termination detection isn't working here for some reason.
 # Perhaps this is because of the bind_leading idiom? TODO: check this out.
-cpdef int run_torus_quiet(int numThreads, int n) except -1:
+cpdef int _run_torus_quiet(int numThreads, int n) except -1:
     cdef int new_numThreads = setActiveThreads(numThreads)
     if new_numThreads != numThreads:
         print("Warning, using fewer threads than requested")
