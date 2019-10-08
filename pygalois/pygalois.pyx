@@ -1,25 +1,31 @@
 # cython: cdivision=True
 
 from cython.operator cimport preincrement
-from .cpp.galois.Galois cimport UserContext, for_each, setActiveThreads
-from .cpp.galois.graphs.Graph cimport dummy_true, dummy_false, FirstGraph
-from .cpp.galois.Timer cimport StatTimer
+from .cpp.galois.Galois cimport UserContext, iterate, for_each, setActiveThreads, SharedMemSys, loopname, no_conflicts, no_pushes
+from .cpp.galois.graphs.Graph cimport dummy_true, dummy_false, MorphGraph
+from .cpp.galois.Timer cimport Timer
 from libcpp.vector cimport vector
 
-ctypedef FirstGraph[int, void, dummy_true] Graph
+# Initialize the Galois runtime when the Python module is loaded.
+cdef class _galois_runtime_wrapper:
+    cdef SharedMemSys _galois_runtime
+
+_galois_runtime = _galois_runtime_wrapper()
+
+ctypedef MorphGraph[int, void, dummy_true] Graph
 
 # Cython bug: using a nested class from a previous typedef doesn't
 # work for the time being. Instead, the full template specialization
 # must be used to get the member type.
-ctypedef FirstGraph[int, void, dummy_true].GraphNode GNode
+ctypedef MorphGraph[int, void, dummy_true].GraphNode GNode
 
 # This function is expected to forward C++ exceptions thrown to
 # its caller. This is unusual for Cython, but it's the simplest
 # way to guarantee no loos Python exceptions end up floating around.
 cdef void IncrementNeighbors(Graph *g, GNode n, UserContext[GNode] &ctx) nogil:
     cdef:
-        FirstGraph[int, void, dummy_true].edge_iterator ii = g[0].edge_begin(n)
-        FirstGraph[int, void, dummy_true].edge_iterator ei = g[0].edge_end(n)
+        MorphGraph[int, void, dummy_true].edge_iterator ii = g[0].edge_begin(n)
+        MorphGraph[int, void, dummy_true].edge_iterator ei = g[0].edge_end(n)
         int *data
     while ii != ei:
         data = &g[0].getData(g[0].getEdgeDst(ii))
@@ -103,11 +109,13 @@ def run_torus(int numThreads, int n):
     print("Using {0} thread(s) and {1} x {1} torus.".format(new_numThreads, n))
     cdef Graph graph
     constructTorus(graph, n, n)
-    cdef StatTimer T
+    cdef Timer T
+    print("starting for_each")
     with nogil:
         T.start()
-        for_each(graph.begin(), graph.end(),
-                 bind_leading(&IncrementNeighbors, &graph))
+        for_each(iterate(graph.begin(), graph.end()),
+                 bind_leading(&IncrementNeighbors, &graph), no_pushes())#,
+                 #loopname("name1"))
         T.stop()
     print("Elapsed time: {} milliseconds.".format(T.get()))
     cdef int count = count_if(graph.begin(), graph.end(),
@@ -124,10 +132,10 @@ cpdef int run_torus_quiet(int numThreads, int n) except -1:
         print("Warning, using fewer threads than requested")
     cdef Graph graph
     constructTorus(graph, n, n)
-    cdef StatTimer T
+    cdef Timer T
     T.start()
-    for_each(graph.begin(), graph.end(),
-             bind_leading(&IncrementNeighbors, &graph))
+    for_each(iterate(graph.begin(), graph.end()),
+             bind_leading(&IncrementNeighbors, &graph), no_pushes())
     T.stop()
     cdef int count = count_if(graph.begin(), graph.end(),
                               bind_leading(&ValueEqual, &graph, 4))
@@ -135,3 +143,4 @@ cpdef int run_torus_quiet(int numThreads, int n) except -1:
         raise ValueError("Expected {} nodes with value = 4 but found "
                          "{} nodes instead.".format(n * n, count))
     return T.get()
+

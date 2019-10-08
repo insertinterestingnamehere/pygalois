@@ -14,10 +14,10 @@ cdef extern from *:
 # thrown in the code written using these forward declarations
 # are forwarded properly into the Galois library rather than
 # being converted into Python exceptions.
-cdef extern from "galois/graphs/Graph.h" namespace "galois::graph" nogil:
-    cppclass FirstGraph[node_data, edge_data, is_directed]:
+cdef extern from "galois/graphs/Graph.h" namespace "galois::graphs" nogil:
+    cppclass MorphGraph[node_data, edge_data, is_directed]:
 
-        FirstGraph()
+        morph_graph()
         cppclass GraphNode:
             pass
 
