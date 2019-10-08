@@ -1,4 +1,4 @@
 A Prototype implementation of a Python interface for the Galois library
 for parallelism in graph algorithms.
-The Galois library is licensed under the UT Austin Research License.
+The Galois library is licensed under the three clause BSD license.
 These bindings are licensed under the two clause BSD license.
